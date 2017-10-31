@@ -7,6 +7,8 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using EjemploMVC.Models;
 
 namespace EjemploMVC
 {
@@ -14,7 +16,19 @@ namespace EjemploMVC
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            var host = BuildWebHost(args);
+            using (var contexto = host.Services.CreateScope())
+            {
+                var services = contexto.ServiceProvider;
+                try {
+                    InicioBD.Inicializar(services);
+                }
+                catch(Exception ex) {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "Error en la base de datos");
+                }
+            }
+            host.Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
