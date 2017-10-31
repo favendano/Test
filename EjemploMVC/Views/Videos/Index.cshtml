@@ -1,10 +1,22 @@
-﻿@model IEnumerable<EjemploMVC.Models.Videos>
+﻿@model EjemploMVC.Models.VistaGenero
 
 @{
     ViewData["Title"] = "Index";
 }
 
 <h2>Listado</h2>
+
+<form asp-controller="Videos" asp-action="Index" method="get">
+    <p>
+        <select name="vGenero" asp-for="generoVideo" asp-items="Model.Generos">
+        <option value ="">Todos</option>
+        </select>
+    </p>
+    <p style="text-emphasis:filled">
+        T&iacute;tulo= <input type="text" name="vBusqueda" >
+        <input type="submit" value="Filter"/>
+    </p>
+</form>
 
 <p>
     <a asp-action="Create">Crear Nuevo</a>
@@ -13,22 +25,22 @@
     <thead>
         <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Titulo)
+                    @Html.DisplayNameFor(model => model.L_Videos[0].Titulo)
                 </th>
                 <th>
-                    Fecha de Estreno
+                    @Html.DisplayNameFor(model => model.L_Videos[0].FechaEstreno)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Genero)
+                    @Html.DisplayNameFor(model => model.L_Videos[0].Genero)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Precio)
+                    @Html.DisplayNameFor(model => model.L_Videos[0].Precio)
                 </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.L_Videos) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Titulo)

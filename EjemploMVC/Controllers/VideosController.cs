@@ -19,9 +19,27 @@ namespace EjemploMVC.Controllers
         }
 
         // GET: Videos
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string vGenero, string vBusqueda)
         {
-            return View(await _context.Videos.ToListAsync());
+            IQueryable<string> busquedaGenero = from m in _context.Videos
+                                                orderby m.Genero
+                                                select m.Genero;
+
+            var Videos = from m in _context.Videos select m;
+
+            if (!String.IsNullOrEmpty(vBusqueda))
+                { Videos = Videos.Where(s => s.Titulo.Contains(vBusqueda));
+                }
+            if (!String.IsNullOrEmpty(vGenero))
+            {
+                Videos = Videos.Where(x => x.Genero == vGenero);
+            }
+
+            var VistaGeneroMV = new VistaGenero();
+            VistaGeneroMV.Generos = new SelectList(await busquedaGenero.Distinct().ToListAsync());
+            VistaGeneroMV.L_Videos = await Videos.ToListAsync();
+
+            return View(VistaGeneroMV);
         }
 
         // GET: Videos/Details/5
